@@ -40,3 +40,21 @@
 .read-the-docs {
   color: #888;
 }
+
+input {
+  display: block;
+  border-radius: 10px;
+  width: 50vw;
+  height: 2em;
+  padding: 1em;
+  font-size: 1.5em;
+  margin-bottom: 1em;
+}
+
+label {
+  font-size: 1.5em
+}
+
+h2 {
+  font-size: 3em;
+}
