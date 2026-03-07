@@ -7,9 +7,10 @@ function App() {
   const [userReply, setUserReply] = useState(null)
   //this needs to be an array:
   const [activities, setActivities] = useState([])
+  const [activityLocations, setActivityLocations] = useState([])
 
   const userNameInput = useRef()
-  const activity1Input = useRef()
+  const userLocationInput = useRef()
   
 // <input id="messageInput" placeholder="Type message">
 //* <button onclick="sendMessage()">Send</button>
@@ -38,10 +39,12 @@ function App() {
       e.preventDefault()
   
       const userName = userNameInput.current.value;
+      const userLocation = userLocationInput.current.value;
 
       //store it gettattably??????
       const jsonData = {
         text: userName,
+        location: userLocation,
         activities: activities
       };
 
@@ -53,7 +56,7 @@ function App() {
           headers: {
               "Content-Type": "application/json"
           },
-          body: JSON.stringify({ text: userName, activities })
+          body: JSON.stringify({ text: userName, location: userLocation, activities })
       });
 
       if (!response.ok) {
@@ -62,9 +65,13 @@ function App() {
 
       const data = await response.json();
       setUserReply(data.reply || "No reply from server");
+      setActivityLocations(data.activity_locations || []);
+
       } catch (error) {
         setUserReply(`Error ${error.message}`);
       }
+
+     
   }
 
   // async function handleActivitySubmit(e) {
@@ -103,6 +110,9 @@ function App() {
 
           <label htmlFor="uname">Enter your username: </label>
           <input ref={ userNameInput } id="uname" type="text" name="name" minLength="4" maxLength="20" className="username-input" required />
+
+          <label htmlFor="location">Enter your town or city: </label>
+          <input ref={ userLocationInput } id="location" type="text" name="location" minLength="4" maxLength="20" className="location-input" required />
           
 
           {/* <label htmlFor="activity1">Choose an activity:</label>
@@ -113,28 +123,37 @@ function App() {
           <h2>Activities</h2>
 
           {activities.map((activity, index) => (
-            <div>
+            <div key={ index }>
               <label htmlFor="activity-input">Activity { index + 1 }</label>
-              <input id="activity-input"type="text" value={ activity } onChange={(e) => handleActivityChange(index, e.target.value)}></input>
+              <input id="activity-input" type="text" value={ activity } onChange={(e) => handleActivityChange(index, e.target.value)}></input>
             </div>
-
           ))}
 
 
-          <button type="button" onClick={ addActivity }>Add another activity</button>
+          <button type="button" onClick={ addActivity }>Add activity</button>
 
           <p>When you have finished choosing, press Submit</p>
 
           <button type="submit">Submit</button>
 
+          {/* {activities.length > 0 && <p> You have chosen { activities }</p>} */}
+
+          {/* this actually gets it */}
           <p id="response" className="username">{ userReply }</p>
-
-
-          {activities.length > 0 && <p>You have chosen { activities }</p>}
 
         </form>
 
+        <div className='itinerary'>
+          <h2>Your sustainable itinerary:</h2>
+          <p>We have found the most efficient route taking in the locations that meet your requirements: </p>
+          <ul>
+            { activityLocations.map((location, index) => (
+              <li key={ index }>{ index + 1 }. { location }</li>
+            ))
+            }
+          </ul>
 
+        </div>
         {/* <div className="card">
           <button onClick={() => setCount((count) => count + 1)}>
             count is {count}

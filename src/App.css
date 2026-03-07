@@ -1,11 +1,11 @@
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
 
-.logo {
+/* .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
@@ -16,16 +16,16 @@
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
-}
+} */
 
-@keyframes logo-spin {
+/* @keyframes logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
@@ -37,9 +37,6 @@
   padding: 2em;
 }
 
-.read-the-docs {
-  color: #888;
-}
 
 input {
   display: block;
@@ -48,13 +45,27 @@ input {
   height: 2em;
   padding: 1em;
   font-size: 1.5em;
-  margin-bottom: 1em;
+  margin: 0 auto 1em auto;
 }
 
-label {
+label, p{
   font-size: 1.5em
 }
 
 h2 {
   font-size: 3em;
+}
+
+li {
+  list-style: none;
+  font-size: 1.5em;
+}
+
+.itinerary {
+  width: 80%;
+  height: fit-content;
+  border: solid 1px white;
+  border-radius: 10px;
+  padding: 1em;
+  margin: 2em auto;
 }

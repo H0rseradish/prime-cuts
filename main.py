@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import json
  
 app = FastAPI()
  
@@ -12,9 +13,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
- 
-class Message(BaseModel):
+
+class UserActivities(BaseModel):
     text: str
+    location: str
+    activities: list[str]
+
+
+# class Message(BaseModel):
+#     text: str
  
 @app.get("/")
 def read_root():
@@ -29,16 +36,24 @@ def read_root():
  
 #     return {"reply": f"Hi {text}"}
 
-class UserActivities(BaseModel):
-    username: str
-    activities: list[str]
+
 
 @app.post("/send")
 def receive_user_activities(data: UserActivities):
-    return {"reply": f"{data.username} submitted: {', '.join(data.activities)}"}
+    
+    print(data.text)
+    print(data.activities)
 
- @app.post("/send")
-def receive_message(msg: Message):
-    print(msg)
-    print(msg.activities)
+    data_dict = data.dict()
+
+    with open("activities.json", "a") as f:
+        json.dump(data_dict, f)
+        f.write("\n")
+
+
+    return {
+        "reply": f"{data.text}, your location is {data.location}, and you submitted these activities: {', '.join(data.activities)}",
+        "activity_locations": ["Menai Straits", "Zip World", "North Wales Zoo"]
+    }
  
+# activity_locations: ["menai straits", "zip world", "north wales zoo"]
