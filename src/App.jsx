@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react'
-
+// import Map from './Map'
 import './App.css'
+// import { APIProvider, Map, MapCameraChangedEvent } from '@vis.gl/react-google-maps';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -8,9 +10,12 @@ function App() {
   //this needs to be an array:
   const [activities, setActivities] = useState([])
   const [activityLocations, setActivityLocations] = useState([])
+  const [activityCoords, setActivityCoords] = useState([])
 
   const userNameInput = useRef()
   const userLocationInput = useRef()
+
+  
   
 // <input id="messageInput" placeholder="Type message">
 //* <button onclick="sendMessage()">Send</button>
@@ -66,11 +71,12 @@ function App() {
       const data = await response.json();
       setUserReply(data.reply || "No reply from server");
       setActivityLocations(data.activity_locations || []);
+      setActivityCoords(data.activity_coords || []);
 
       } catch (error) {
         setUserReply(`Error ${error.message}`);
       }
-
+      console.log(activityCoords)
      
   }
 
@@ -145,13 +151,44 @@ function App() {
 
         <div className='itinerary'>
           <h2>Your sustainable itinerary:</h2>
-          <p>We have found the most efficient route taking in the locations that meet your requirements: </p>
+          <p>We have found the most efficient route taking in the nearest locations that meet your requirements: </p>
           <ul>
             { activityLocations.map((location, index) => (
               <li key={ index }>{ index + 1 }. { location }</li>
             ))
             }
           </ul>
+
+          <div className="map">
+            <LoadScript googleMapsApiKey=''>
+              <GoogleMap
+                mapContainerStyle={{ width: '100%', height: '400px' }}
+                center={{ lat: 53.2, lng: -3.8 }} // example
+                zoom={10}
+              >
+                { activityCoords.map((coordpair, index) => 
+                    <Marker 
+                      key={ index } 
+                      position={ { lat: coordpair.lat, lng: coordpair.lng } }
+                      // title={ index + 1 }
+                    />
+                )}
+                {/* <Marker position={center} /> */}
+              </GoogleMap>
+
+            </LoadScript>
+
+          </div>
+
+          {/* <APIProvider apiKey={'AIzaSyAn7mQS3tRfditAyRrsrKtya2wgAlSLfrs'} onLoad={() => console.log('Maps API has loaded.')}>
+            <Map>
+              defaultZoom={13}
+              defaultCenter={ { lat: -33.860664, lng: 151.208138 } }
+              onCameraChanged={ (ev: MapCameraChangedEvent) =>
+              console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
+              }
+            </Map>
+          </APIProvider> */}
 
         </div>
         {/* <div className="card">
@@ -165,3 +202,4 @@ function App() {
 }
 
 export default App
+``
